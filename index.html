@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinépolis - Front Cartelera Profesional</title>
+    <style>
+        /* DISEÑO PREMIUM INSPIRADO EN CINÉPOLIS */
+        :root {
+            --azul-oscuro: #0a1128;
+            --azul-card: #1c2541;
+            --dorado: #ffc107;
+            --dorado-hover: #e0a800;
+            --texto-claro: #f8f9fa;
+            --texto-mutado: #94a3b8;
+            --exito: #10b981;
+            --alerta: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--azul-oscuro);
+            color: var(--texto-claro);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 50px;
+        }
+
+        /* Encabezado Corporativo */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--dorado);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        header h1 {
+            color: var(--dorado);
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        header p {
+            color: var(--texto-mutated);
+            margin: 5px 0 0 0;
+            font-size: 1.1rem;
+        }
+
+        /* Barra de Filtros Avanzada */
+        .filtros-seccion {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--azul-card);
+            border-radius: 12px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .control-grupo {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-grupo label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--dorado);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .buscador, .select-filtro {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid #334155;
+            background-color: #0f172a;
+            color: white;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .buscador:focus, .select-filtro:focus {
+            outline: none;
+            border-color: var(--dorado);
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.3);
+        }
+
+        .select-filtro {
+            cursor: pointer;
+        }
+
+        /* Grid Principal de la Cartelera */
+        .cartelera-contenedor {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* Tarjeta de Película Estilo Pro */
+        .pelicula-card {
+            background-color: var(--azul-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #2e3a5f;
+            position: relative;
+        }
+
+        .pelicula-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.15);
+        }
+
+        /* Badge de Estado Inteligente (En Cartelera / Próximamente) */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .status-activo { background-color: var(--exito); color: white; }
+        .status-proximo { background-color: var(--alerta); color: #000; }
+
+        .poster-contenedor {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            background-color: #0f172a;
+        }
+
+        .pelicula-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pelicula-cuerpo {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .pelicula-titulo {
+            font-size: 1.4rem;
+            color: white;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Etiquetas Metadatos */
+        .meta-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            background-color: #334155;
+            color: #cbd5e1;
+        }
+
+        .badge-ubicacion {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        .badge-fecha {
+            background-color: #475569;
+            color: #f1f5f9;
+        }
+
+        .pelicula-sinopsis {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+            margin: 0 0 20px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* SECCIÓN DE HORARIOS PRO */
+        .horarios-seccion {
+            margin-top: auto;
+            border-top: 1px solid #2e3a5f;
+            padding-top: 15px;
+        }
+
+        .horarios-titulo {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--dorado);
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .horarios-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hora-btn {
+            background-color: #0f172a;
+            color: var(--dorado);
+            border: 1px solid var(--dorado);
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hora-btn:hover {
+            background-color: var(--dorado);
+            color: #000;
+        }
+
+        /* Animación de carga */
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: var(--dorado);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CINEÁPOLIS</h1>
+        <p>Sistema de Cartelera Digital Profesional</p>
+    </header>
+
+    <section class="filtros-seccion">
+        <div class="control-grupo">
+            <label for="buscador">Buscar Película</label>
+            <input type="text" id="buscador" class="buscador" placeholder="Escribe el título...">
+        </div>
+        
+        <div class="control-grupo">
+            <label for="filtroGenero">Filtrar por Género</label>
+            <select id="filtroGenero" class="select-filtro">
+                <option value="todos">Todos los Géneros</option>
+                <option value="accion">Acción / Aventura</option>
+                <option value="terror">Terror / Horror</option>
+                <option value="comedia">Comedia / Infantil</option>
+                <option value="drama">Drama</option>
+                <option value="ciencia ficcion">Ciencia Ficción</option>
+            </select>
+        </div>
+
+        <div class="control-grupo">
+            <label for="filtroDisponibilidad">Disponibilidad</label>
+            <select id="filtroDisponibilidad" class="select-filtro">
+                <option value="todos">Todos los Estados</option>
+                <option value="cartelera">En Cartelera</option>
+                <option value="proximamente">Próximamente</option>
+            </select>
+        </div>
+    </section>
+
+    <main id="cartelera" class="cartelera-contenedor">
+        <div class="loader">Conectando al servidor de Cinépolis y cargando funciones...</div>
+    </main>
+
+    <script>
+        const API_URL = 'http://52.171.58.51:8080/api/cartelera';
+        let peliculasOriginales = [];
+
+        // 1. LLAMADA A LA API
+        async function cargarCartelera() {
+            try {
+                const respuesta = await fetch(API_URL);
+                peliculasOriginales = await respuesta.json();
+                renderizarCartelera(peliculasOriginales);
+            } catch (error) {
+                console.error("Error cargando API:", error);
+                document.getElementById('cartelera').innerHTML = `<div class="loader" style="color: #ef4444;">Error técnico al conectar con la base de datos de la cartelera.</div>`;
+            }
+        }
+
+        // 2. FORMATEADOR DE FECHAS (Convierte "2025-08-29T23:..." en algo pro como "29 Ago 2025")
+        function formatearFecha(fechaString) {
+            if (!fechaString) return "Fecha N/A";
+            try {
+                const fecha = new Date(fechaString);
+                if(isNaN(fecha.getTime())) return "Próximamente";
+                const opciones = { day: 'numeric', month: 'short', year: 'numeric' };
+                return fecha.toLocaleDateString('es-GT', opciones);
+            } catch (e) {
+                return "Próximamente";
+            }
+        }
+
+        // 3. GENERADOR DE HORARIOS INTERNOS ESTABLES (Usa el ID para fijar horas fijas reales)
+        function obtenerHorariosPorId(id) {
+            // Horarios base realistas de Cinépolis
+            const listaHorarios = [
+                ["13:15", "15:45", "18:30", "21:15"],
+                ["14:00", "16:30", "19:15", "22:00"],
+                ["12:30", "15:00", "17:45", "20:30"],
+                ["15:10", "18:00", "20:50"]
+            ];
+            // Algoritmo matemático simple para que según el ID siempre devuelva la misma fila de horas
+            let num = 0;
+            if(id) {
+                for (let i = 0; i < id.length; i++) num += id.charCodeAt(i);
+            }
+            return listaHorarios[num % listaHorarios.length];
+        }
+
+        // 4. RENDERIZADO DE LAS TARJETAS EN PANTALLA
+        function renderizarCartelera(lista) {
+            const contenedor = document.getElementById('cartelera');
+            contenedor.innerHTML = "";
+
+            if (lista.length === 0) {
+                contenedor.innerHTML = `<div class="loader" style="color: #94a3b8;">No se encontraron resultados para los filtros seleccionados.</div>`;
+                return;
+            }
+
+            lista.forEach(peli => {
+                const card = document.createElement('div');
+                card.classList.add('pelicula-card');
+
+                // Procesamiento de Atributos del JSON
+                const titulo = peli.Title || "Película sin Título";
+                const poster = peli.Poster || "https://via.placeholder.com/350x450?text=Cinepolis+Poster";
+                const genero = peli.Type || "General";
+                const ubicacion = peli.Ubication || "Cinépolis Central";
+                const sinopsis = peli.description || "No hay sinopsis disponible para esta producción actualmente.";
+                const fechaFormateada = formatearFecha(peli.Fec_Registro);
+                
+                // Evaluar Estado del JSON (true/false/null)
+                // Si el estado es true -> En Cartelera. Si es false o null -> Próximamente
+                const esActiva = peli.Estado === true;
+                const badgeEstadoHTML = esActiva 
+                    ? `<span class="status-badge status-activo">En Cartelera</span>`
+                    : `<span class="status-badge status-proximo">Próximamente</span>`;
+
+                // Generar los botones de horas
+                const horas = obtenerHorariosPorId(peli.imdbID);
+                let horariosHTML = '';
+                
+                if(esActiva) {
+                    horariosHTML = `<div class="horarios-seccion">
+                        <div class="horarios-titulo">Horarios Disponibles (Clic para reservar):</div>
+                        <div class="horarios-grid">
+                            ${horas.map(h => `<button class="hora-btn" onclick="alert('Abriendo pasarela de pago para la función de las ${h} de la película: ${titulo.replace(/'/g, "\\'")}')">${h}</button>`).join('')}
+                        </div>
+                    </div>`;
+                } else {
+                    horariosHTML = `<div class="horarios-seccion">
+                        <div class="horarios-titulo" style="color: var(--alerta);">Próximo Estreno:</div>
+                        <p style="margin:0; font-size:0.85rem; color: var(--texto-mutado);">Pronto se habilitarán los horarios de compra.</p>
+                    </div>`;
+                }
+
+                card.innerHTML = `
+                    ${badgeEstadoHTML}
+                    <div class="poster-contenedor">
+                        <img class="pelicula-poster" src="${poster}" alt="${titulo}" onerror="this.src='https://via.placeholder.com/350x450?text=Imagen+No+Disponible'">
+                    </div>
+                    <div class="pelicula-cuerpo">
+                        <h2 class="pelicula-titulo">${titulo}</h2>
+                        <div class="meta-contenedor">
+                            <span class="badge">${genero}</span>
+                            <span class="badge badge-ubicacion">📍 ${ubicacion}</span>
+                            <span class="badge badge-fecha">📅 ${fechaFormateada}</span>
+                        </div>
+                        <p class="pelicula-sinopsis">${sinopsis}</p>
+                        ${horariosHTML}
+                    </div>
+                `;
+                contenedor.appendChild(card);
+            });
+        }
+
+        // 5. SISTEMA DE FILTRADO MULTI-VARIABLE (Buscador + Género + Disponibilidad)
+        function ejecutarFiltros() {
+            const buscadorTexto = document.getElementById('buscador').value.toLowerCase().trim();
+            const generoSeleccionado = document.getElementById('filtroGenero').value;
+            const disponibilidadSeleccionada = document.getElementById('filtroDisponibilidad').value;
+
+            const resultado = peliculasOriginales.filter(peli => {
+                // Filtro 1: Título
+                const coincideTitulo = peli.Title ? peli.Title.toLowerCase().includes(buscadorTexto) : false;
+
+                // Filtro 2: Género (Lógica de normalización de cadenas de texto)
+                const generoPeli = peli.Type ? peli.Type.toLowerCase() : "";
+                let coincideGenero = false;
+
+                if (generoSeleccionado === "todos") {
+                    coincideGenero = true;
+                } else if (generoSeleccionado === "accion") {
+                    coincideGenero = generoPeli.includes("accion") || generoPeli.includes("acción") || generoPeli.includes("aventura");
+                } else if (generoSeleccionado === "terror") {
+                    coincideGenero = generoPeli.includes("terror") || generoPeli.includes("horror");
+                } else if (generoSeleccionado === "comedia") {
+                    coincideGenero = generoPeli.includes("comedia") || generoPeli.includes("infantil");
+                } else if (generoSeleccionado === "drama") {
+                    coincideGenero = generoPeli.includes("drama") || generoPeli.includes("mayores 18");
+                } else if (generoSeleccionado === "ciencia ficcion") {
+                    coincideGenero = generoPeli.includes("ciencia") || generoPeli.includes("ficcion") || generoPeli.includes("suspenso");
+                }
+
+                // Filtro 3: Disponibilidad (Estado true / false-null)
+                let coincideDisponibilidad = false;
+                if (disponibilidadSeleccionada === "todos") {
+                    coincideDisponibilidad = true;
+                } else if (disponibilidadSeleccionada === "cartelera") {
+                    coincideDisponibilidad = peli.Estado === true;
+                } else if (disponibilidadSeleccionada === "proximamente") {
+                    coincideDisponibilidad = peli.Estado === false || peli.Estado === null;
+                }
+
+                // Devolver elemento solo si pasa las 3 condiciones
+                return coincideTitulo && coincideGenero && coincideDisponibilidad;
+            });
+
+            renderizarCartelera(resultado);
+        }
+
+        // Eventos en tiempo real
+        document.getElementById('buscador').addEventListener('input', ejecutarFiltros);
+        document.getElementById('filtroGenero').addEventListener('change', ejecutarFiltros);
+        document.getElementById('filtroDisponibilidad').addEventListener('change', ejecutarFiltros);
+
+        // Carga inicial al arrancar el navegador
+        cargarCartelera();
+    </script>
+</body>
+</html>
